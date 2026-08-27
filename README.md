@@ -143,18 +143,34 @@ docker run -p 5000:5000 \
 </details>
 
 <details>
-<summary><b>Separate frontend and API</b></summary>
+<summary><b>Vercel for the frontend, Railway for the API</b></summary>
 
-Run the API anywhere Node runs with `SERVE_FRONTEND=false`, then build the SPA
-against it:
+The SPA is a static bundle, so it can live on Vercel while the API runs
+elsewhere. Two settings make the pair work:
+
+1. **On Vercel** — set the project's root directory to `frontend`, then add an
+   environment variable:
+
+   | Variable | Value |
+   | --- | --- |
+   | `REACT_APP_API_URL` | `https://your-api.up.railway.app/api` |
+
+   This is read at *build* time, so redeploy after changing it. Without it the
+   bundle calls `/api` on the Vercel domain, where no API is listening, and
+   every request fails.
+
+   [`frontend/vercel.json`](frontend/vercel.json) already supplies the rewrite
+   that lets client-side routes such as `/issues` survive a page refresh.
+
+2. **On the API** — deploy with `SERVE_FRONTEND=false` and add the Vercel domain
+   to `CORS_ORIGINS`, or the browser will block the responses.
+
+Building the same bundle locally:
 
 ```bash
 cd frontend
 REACT_APP_API_URL=https://your-api.example.com/api npm run build
 ```
-
-Deploy `frontend/build` to any static host, and add that host's origin to
-`CORS_ORIGINS` on the API.
 
 </details>
 
