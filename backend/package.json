@@ -51,5 +51,11 @@
       "src/**/*.js",
       "!src/config/database.js"
     ]
+  },
+  "author": "Sandeep Srinivasan S",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sandeepsrinivasan-14/trackit.git",
+    "directory": "backend"
   }
 }

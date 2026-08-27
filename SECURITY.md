@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Please report security issues privately by opening a
-[GitHub security advisory](https://github.com/Sandeepsrinivasan-14/pcp-5-FA-/security/advisories/new)
+[GitHub security advisory](https://github.com/Sandeepsrinivasan-14/trackit/security/advisories/new)
 rather than a public issue.
 
 ## What this application enforces

@@ -4,6 +4,24 @@
   "private": true,
   "description": "TrackIt — a MERN issue and bug tracking system with role-based access control",
   "license": "MIT",
+  "author": "Sandeep Srinivasan S",
+  "homepage": "https://github.com/Sandeepsrinivasan-14/trackit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sandeepsrinivasan-14/trackit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sandeepsrinivasan-14/trackit/issues"
+  },
+  "keywords": [
+    "issue-tracker",
+    "bug-tracker",
+    "mern",
+    "express",
+    "mongodb",
+    "react",
+    "rbac"
+  ],
   "engines": {
     "node": ">=20"
   },
