@@ -1,0 +1,50 @@
+# Local, production-shaped stack: MongoDB plus the single-service app image
+# (API + built SPA) on http://localhost:5000
+#
+#     cp .env.example .env      # then set JWT_SECRET
+#     docker compose up --build
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    # Not published to the host by default — only the app needs to reach it.
+    expose:
+      - '27017'
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://mongo:27017/trackit
+      SERVE_FRONTEND: 'true'
+      TRUST_PROXY: 'true'
+      CORS_ORIGINS: http://localhost:5000
+      # Required. Generate with:
+      #   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set — copy .env.example to .env}
+      # Bootstrap an administrator on first boot.
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SEED_DEMO_USERS: ${SEED_DEMO_USERS:-false}
+      SEED_DEMO_PASSWORD: ${SEED_DEMO_PASSWORD:-}
+    ports:
+      - '5000:5000'
+
+volumes:
+  mongo-data:

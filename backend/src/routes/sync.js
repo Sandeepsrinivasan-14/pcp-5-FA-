@@ -1,7 +1,19 @@
 const express = require('express');
-const router = express.Router();
 const { syncDataset } = require('../controllers/syncController');
+const { authenticate, authorize } = require('../middleware/auth');
+const { validateBody } = require('../middleware/validate');
+const { syncSchema } = require('../validators/schemas');
 
-router.post('/', syncDataset);
+const router = express.Router();
+
+// This endpoint bulk-writes users, projects, issues and comments. It shipped
+// unauthenticated, which let anyone on the internet overwrite the database.
+router.post(
+    '/',
+    authenticate,
+    authorize('admin', 'manager'),
+    validateBody(syncSchema),
+    syncDataset
+);
 
 module.exports = router;

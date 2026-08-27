@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// Listing demo accounts is a development convenience. It is opt-in so a public
+// deployment does not advertise which accounts to try.
+const SHOW_DEMO_HINT =
+    process.env.REACT_APP_SHOW_DEMO_ACCOUNTS === 'true' || process.env.NODE_ENV === 'development';
+
 function Login() {
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const { login, error, loading } = useAuth();
@@ -58,15 +63,21 @@ function Login() {
                     )}
                 </form>
 
-                <div style={{ marginTop: 24, fontSize: '0.85rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border)', paddingTop: 16 }} data-testid="demo-accounts-info">
-                    <p style={{ fontWeight: 600, marginBottom: 8, color: 'white' }}>Demo Accounts (Password matches username + '123' / 'dev123'):</p>
-                    <ul style={{ listStyleType: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        <li>• Admin: <code style={{ color: 'var(--primary-hover)' }}>admin@test.com</code> (admin123)</li>
-                        <li>• Manager: <code style={{ color: 'var(--primary-hover)' }}>manager@test.com</code> (manager123)</li>
-                        <li>• Developer: <code style={{ color: 'var(--primary-hover)' }}>developer@test.com</code> (dev123)</li>
-                        <li>• Tester: <code style={{ color: 'var(--primary-hover)' }}>tester@test.com</code> (tester123)</li>
-                    </ul>
-                </div>
+                {SHOW_DEMO_HINT && (
+                    <div style={{ marginTop: 24, fontSize: '0.85rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border)', paddingTop: 16 }} data-testid="demo-accounts-info">
+                        <p style={{ fontWeight: 600, marginBottom: 8, color: 'white' }}>Demo accounts</p>
+                        <ul style={{ listStyleType: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            <li>• Admin: <code style={{ color: 'var(--primary-hover)' }}>admin@test.com</code></li>
+                            <li>• Manager: <code style={{ color: 'var(--primary-hover)' }}>manager@test.com</code></li>
+                            <li>• Developer: <code style={{ color: 'var(--primary-hover)' }}>developer@test.com</code></li>
+                            <li>• Tester: <code style={{ color: 'var(--primary-hover)' }}>tester@test.com</code></li>
+                        </ul>
+                        <p style={{ marginTop: 8 }}>
+                            Passwords come from <code>SEED_DEMO_PASSWORD</code>, or are printed once
+                            in the server log when the accounts are first seeded.
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
