@@ -13,9 +13,13 @@ const registerSchema = z.object({
     name: trimmed(120),
     email: z.string().trim().toLowerCase().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
-    role: z.enum(ROLES, {
-        message: 'Invalid role. Allowed roles: admin, manager, developer, tester',
-    }),
+    // Optional: honoured only when an administrator makes the request.
+    // A self-registering caller always receives the configured default role.
+    role: z
+        .enum(ROLES, {
+            message: 'Invalid role. Allowed roles: admin, manager, developer, tester',
+        })
+        .optional(),
     department: z.string().trim().max(120).optional(),
 });
 

@@ -33,6 +33,30 @@ const authenticate = asyncHandler(async (req, res, next) => {
     next();
 });
 
+/**
+ * Populates req.user when a valid token is present, but lets the request
+ * through when it is absent or bad. Used where a route is open to the public
+ * yet grants extra privileges to a signed-in caller.
+ */
+const optionalAuthenticate = asyncHandler(async (req, res, next) => {
+    const header = req.header('Authorization') || '';
+    const token = header.startsWith('Bearer ') ? header.slice(7).trim() : null;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, config.jwt.secret);
+            const user = await User.findById(decoded.id).select('-password');
+            if (user && user.status !== 'inactive') {
+                req.user = user;
+            }
+        } catch (error) {
+            // An unusable token is treated as no token here, never as an error.
+        }
+    }
+
+    next();
+});
+
 const authorize = (...roles) => (req, res, next) => {
     if (!req.user) {
         return next(ApiError.unauthorized('No token provided'));
@@ -50,4 +74,4 @@ const signToken = (user) =>
         expiresIn: config.jwt.expiresIn,
     });
 
-module.exports = { authenticate, authorize, signToken, ROLES };
+module.exports = { authenticate, optionalAuthenticate, authorize, signToken, ROLES };

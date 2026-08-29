@@ -67,6 +67,15 @@ const config = {
         password: process.env.ADMIN_PASSWORD,
     },
 
+    registration: {
+        // Anyone may create their own account. Off in production by default:
+        // an open endpoint on a team tool lets strangers into the workspace.
+        allowPublic: bool(process.env.ALLOW_PUBLIC_REGISTRATION, !isProduction),
+        // The role a self-registered account receives. A caller can never
+        // choose their own role — only an administrator may set one.
+        defaultRole: process.env.DEFAULT_REGISTRATION_ROLE || 'developer',
+    },
+
     seed: {
         demoUsers: bool(process.env.SEED_DEMO_USERS, !isProduction),
         demoPassword: process.env.SEED_DEMO_PASSWORD,

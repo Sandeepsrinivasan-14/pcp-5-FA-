@@ -1,3 +1,4 @@
+const config = require('../config');
 const User = require('../models/User');
 const ActivityLog = require('../models/ActivityLog');
 const ApiError = require('../utils/ApiError');
@@ -18,6 +19,19 @@ const publicUser = (user) => ({
 const register = asyncHandler(async (req, res) => {
     const { name, email, password, role, department } = req.body;
 
+    // Only an administrator may decide what role an account gets. Without this
+    // the endpoint hands out admin accounts to anyone who asks for one, which
+    // makes every other permission check in the API pointless.
+    const isAdminCaller = req.user?.role === 'admin';
+
+    if (!isAdminCaller && !config.registration.allowPublic) {
+        throw ApiError.forbidden(
+            'Self-registration is disabled. An administrator must create your account.'
+        );
+    }
+
+    const assignedRole = isAdminCaller && role ? role : config.registration.defaultRole;
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
         throw ApiError.conflict('Email already registered');
@@ -28,7 +42,7 @@ const register = asyncHandler(async (req, res) => {
         name,
         email,
         password,
-        role,
+        role: assignedRole,
         ...(department ? { department } : {}),
     });
 

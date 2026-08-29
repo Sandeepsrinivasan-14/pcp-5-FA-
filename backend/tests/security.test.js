@@ -77,6 +77,85 @@ describe('Security properties', () => {
         }
     });
 
+    describe('privilege escalation through registration', () => {
+        const payload = {
+            name: 'Mallory',
+            email: 'mallory@test.com',
+            password: 'StrongPassword1',
+        };
+
+        it('ignores a role an anonymous caller asks for', async () => {
+            const res = await request(app)
+                .post('/api/auth/register')
+                .send({ ...payload, role: 'admin' });
+
+            expect(res.status).toBe(201);
+            // The request asked for admin; the account must not be one.
+            expect(res.body.data.role).not.toBe('admin');
+            expect(res.body.data.role).toBe(config.registration.defaultRole);
+
+            const stored = await User.findOne({ email: payload.email });
+            expect(stored.role).toBe(config.registration.defaultRole);
+        });
+
+        it('ignores a role a non-admin signed-in caller asks for', async () => {
+            const { token } = await createUser({ role: 'manager' });
+
+            const res = await request(app)
+                .post('/api/auth/register')
+                .set(auth(token))
+                .send({ ...payload, role: 'admin' });
+
+            expect(res.status).toBe(201);
+            expect(res.body.data.role).toBe(config.registration.defaultRole);
+        });
+
+        it('lets an administrator create an account with a chosen role', async () => {
+            const { token } = await createUser({ role: 'admin' });
+
+            const res = await request(app)
+                .post('/api/auth/register')
+                .set(auth(token))
+                .send({ ...payload, role: 'manager' });
+
+            expect(res.status).toBe(201);
+            expect(res.body.data.role).toBe('manager');
+        });
+
+        it('refuses anonymous registration when public sign-up is disabled', async () => {
+            const original = config.registration.allowPublic;
+            config.registration.allowPublic = false;
+
+            try {
+                const res = await request(app).post('/api/auth/register').send(payload);
+
+                expect(res.status).toBe(403);
+                expect(res.body.message).toMatch(/Self-registration is disabled/);
+                expect(await User.countDocuments({ email: payload.email })).toBe(0);
+            } finally {
+                config.registration.allowPublic = original;
+            }
+        });
+
+        it('still lets an administrator create accounts when public sign-up is off', async () => {
+            const { token } = await createUser({ role: 'admin' });
+            const original = config.registration.allowPublic;
+            config.registration.allowPublic = false;
+
+            try {
+                const res = await request(app)
+                    .post('/api/auth/register')
+                    .set(auth(token))
+                    .send({ ...payload, role: 'tester' });
+
+                expect(res.status).toBe(201);
+                expect(res.body.data.role).toBe('tester');
+            } finally {
+                config.registration.allowPublic = original;
+            }
+        });
+    });
+
     it('rejects an oversized request body', async () => {
         const res = await request(app)
             .post('/api/auth/login')

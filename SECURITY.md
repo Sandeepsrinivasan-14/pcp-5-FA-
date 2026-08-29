@@ -25,6 +25,10 @@ rather than a public issue.
 - Role checks run server-side on each request. The client is never trusted to
   enforce them.
 - Inactive accounts are rejected at authentication time.
+- Registration cannot be used to escalate privilege. The `role` field is
+  honoured only when an administrator makes the request; a self-registering
+  caller always receives `DEFAULT_REGISTRATION_ROLE` regardless of what they
+  send. Self-registration is disabled by default in production.
 
 **Input handling**
 
@@ -63,6 +67,8 @@ rather than a public issue.
 - [ ] `TRUST_PROXY=true` if running behind a load balancer, so rate limiting
       sees real client IPs.
 - [ ] `SEED_DEMO_USERS` is unset or `false`.
+- [ ] `ALLOW_PUBLIC_REGISTRATION` is unset or `false` unless you genuinely want
+      strangers creating accounts.
 - [ ] `ADMIN_PASSWORD` is at least 12 characters and stored in a password
       manager, not in the repository.
 - [ ] Database network access is restricted to your application's egress IPs

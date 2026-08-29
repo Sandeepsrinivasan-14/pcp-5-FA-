@@ -12,6 +12,13 @@ put on the public internet.
 
 ### Security
 
+- **Closed a privilege-escalation hole in registration.** `POST /auth/register`
+  is public and took `role` straight from the request body, so anyone on the
+  internet could create themselves an administrator account and bypass every
+  other permission check in the API. The role is now honoured only when an
+  administrator makes the request; self-registered accounts always receive
+  `DEFAULT_REGISTRATION_ROLE`. Public sign-up is disabled by default in
+  production via `ALLOW_PUBLIC_REGISTRATION`.
 - **Removed committed credentials.** A MongoDB Atlas connection string with its
   password, and an external service account login, were present as literals in
   repository scripts and as fallback defaults in the sync controller. All are
@@ -37,9 +44,9 @@ put on the public internet.
 
 ### Added
 
-- Test suite of 99 cases covering authentication, role permissions, the issue
-  workflow, comments, analytics, configuration validation and security
-  properties.
+- Test suite of 104 backend cases covering authentication, role permissions, the
+  issue workflow, comments, analytics, configuration validation and security
+  properties, plus 3 frontend cases covering route protection.
 - Continuous integration running lint, the test suite against a MongoDB service
   container, the frontend build, and a Docker image build.
 - Multi-stage `Dockerfile` producing a single image that serves the API and the

@@ -13,7 +13,7 @@ analytics — with permissions that hold at the API, not just in the interface.
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black)](https://react.dev)
 [![MongoDB](https://img.shields.io/badge/MongoDB-8-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
-[![Tests](https://img.shields.io/badge/tests-99%20passing-16a34a)](backend/tests)
+[![Tests](https://img.shields.io/badge/tests-107%20passing-16a34a)](backend/tests)
 
 [Deploy your own](#deploy-your-own) · [Quick start](#quick-start) · [API reference](#api-reference) · [Architecture](#architecture) · [Contributing](CONTRIBUTING.md)
 
@@ -307,6 +307,8 @@ with a readable message rather than starting in a broken state.
 | `SERVE_FRONTEND` | | Serve the compiled SPA from this process |
 | `TRUST_PROXY` | | Set behind a load balancer so rate limits see real client IPs |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | | Provision the first administrator at boot |
+| `ALLOW_PUBLIC_REGISTRATION` | | Let anyone create an account (default: development only) |
+| `DEFAULT_REGISTRATION_ROLE` | | Role given to self-registered accounts (default `developer`) |
 | `SEED_DEMO_USERS` | | Create the four demo accounts (default: development only) |
 | `SEED_DEMO_PASSWORD` | | Fixed password for demo accounts; random if unset |
 | `RATE_LIMIT_MAX` | | Requests per window (default `300`) |
@@ -323,9 +325,15 @@ Base path `/api`. Every route except `/health`, `/auth/register` and
 
 | Method | Endpoint | Access | Description |
 | --- | --- | --- | --- |
-| `POST` | `/auth/register` | public | Create an account |
+| `POST` | `/auth/register` | public\* | Create an account |
 | `POST` | `/auth/login` | public | Exchange credentials for a JWT |
 | `GET` | `/auth/me` | any | The authenticated user |
+
+\* Self-registration is enabled in development and disabled in production by
+default; see `ALLOW_PUBLIC_REGISTRATION`. **A caller can never choose their own
+role.** Self-registered accounts always receive `DEFAULT_REGISTRATION_ROLE`; only
+an administrator, passing their own token, may create an account with a
+specified role.
 
 ```bash
 curl -X POST https://your-app/api/auth/login \
@@ -398,7 +406,7 @@ cd backend && npm run test:coverage         # with a coverage report
 cd frontend && npm test -- --watchAll=false # frontend routing tests
 ```
 
-The backend suite is 99 cases across seven files:
+The backend suite is 104 cases across seven files:
 
 | File | Covers |
 | --- | --- |
