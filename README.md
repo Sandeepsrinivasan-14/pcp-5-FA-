@@ -393,11 +393,12 @@ curl 'https://your-app/api/issues?status=open&priority=critical&limit=20' \
 ## Testing
 
 ```bash
-npm test                              # the full backend suite
-cd backend && npm run test:coverage   # with a coverage report
+npm test                                    # the full backend suite
+cd backend && npm run test:coverage         # with a coverage report
+cd frontend && npm test -- --watchAll=false # frontend routing tests
 ```
 
-99 cases across seven files:
+The backend suite is 99 cases across seven files:
 
 | File | Covers |
 | --- | --- |
@@ -409,9 +410,12 @@ cd backend && npm run test:coverage   # with a coverage report
 | `app.test.js` | Routing, error shapes, security headers, config validation |
 | `security.test.js` | Password leakage, sync authorisation, seeding, injection |
 
-The suite runs against an in-memory MongoDB by default. Set `MONGODB_TEST_URI`
-to target a real instance — [CI](.github/workflows/ci.yml) does this with a
-service container.
+It runs against an in-memory MongoDB by default. Set `MONGODB_TEST_URI` to
+target a real instance — [CI](.github/workflows/ci.yml) does this with a service
+container.
+
+The frontend carries a smaller suite covering route protection and that demo
+credentials stay hidden outside development. Both suites run on every push.
 
 Verify a live deployment:
 
