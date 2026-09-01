@@ -81,7 +81,7 @@ test you point at a live deployment.
   <tr>
     <td width="50%">
       <img src="docs/screenshots/team.png" alt="Team directory listing members with role and department" width="100%"><br>
-      <sub><b>Team directory</b> — who is on the team, in which role and department.</sub>
+      <sub><b>Team directory</b> — who is on the team. Administrators add members and change roles inline.</sub>
     </td>
     <td width="50%">
       <img src="docs/screenshots/login.png" alt="TrackIt sign-in screen" width="100%"><br>
@@ -223,6 +223,9 @@ Four roles, checked on every request:
 | Resolve or close an issue | ● | ● | ● | — |
 | Add comments | ● | ● | ● | ● |
 | Delete comments | any | own | own | own |
+| Change your own password | ● | ● | ● | ● |
+| Add a team member | ● | — | — | — |
+| Change a member's role or status | ● | — | — | — |
 | Trigger dataset sync | ● | ● | — | — |
 
 ## The issue workflow
@@ -328,6 +331,7 @@ Base path `/api`. Every route except `/health`, `/auth/register` and
 | `POST` | `/auth/register` | public\* | Create an account |
 | `POST` | `/auth/login` | public | Exchange credentials for a JWT |
 | `GET` | `/auth/me` | any | The authenticated user |
+| `PATCH` | `/auth/password` | any | Change your own password |
 
 \* Self-registration is enabled in development and disabled in production by
 default; see `ALLOW_PUBLIC_REGISTRATION`. **A caller can never choose their own
@@ -389,6 +393,7 @@ curl 'https://your-app/api/issues?status=open&priority=critical&limit=20' \
 | `GET` | `/comments/:id` | any |
 | `DELETE` | `/comments/:id` | author or admin |
 | `GET` | `/users`, `/users/:id` | any |
+| `PATCH` | `/users/:id` | admin — change role, department or status |
 | `GET` | `/analytics/issues` | any — counts by status |
 | `GET` | `/analytics/projects` | any — issues per project |
 | `GET` | `/analytics/developers` | any — resolution leaderboard and average time |
@@ -447,6 +452,7 @@ not a public issue.
 - [ ] Saved filter views per user
 - [ ] Issue labels and milestones
 - [ ] Refresh tokens with rotation
+- [ ] Password reset by email for a forgotten password
 - [ ] OpenAPI specification with a browsable reference
 - [ ] End-to-end tests covering the browser flows
 

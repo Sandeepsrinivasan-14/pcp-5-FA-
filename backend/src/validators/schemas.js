@@ -28,6 +28,26 @@ const loginSchema = z.object({
     password: z.string().min(1, 'Email and password required'),
 });
 
+const changePasswordSchema = z.object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: z.string().min(8, 'New password must be at least 8 characters'),
+});
+
+const updateUserSchema = z
+    .object({
+        name: z.string().trim().min(1).max(120).optional(),
+        role: z.enum(ROLES, {
+            message: 'Invalid role. Allowed roles: admin, manager, developer, tester',
+        }).optional(),
+        department: z.string().trim().max(120).optional(),
+        status: z.enum(['active', 'inactive'], {
+            message: 'Status must be active or inactive',
+        }).optional(),
+    })
+    .refine((data) => Object.keys(data).length > 0, {
+        message: 'Provide at least one field to update',
+    });
+
 const createProjectSchema = z
     .object({
         title: z.string().trim().max(200).optional(),
@@ -113,6 +133,8 @@ module.exports = {
     PROJECT_STATUSES,
     registerSchema,
     loginSchema,
+    changePasswordSchema,
+    updateUserSchema,
     createProjectSchema,
     updateProjectSchema,
     createIssueSchema,

@@ -44,6 +44,15 @@ put on the public internet.
 
 ### Added
 
+- **Password change.** `PATCH /auth/password` requires the current password,
+  reissues a token, and is reachable from the profile page. Previously an
+  account's password could never be changed once set.
+- **Team management for administrators.** `PATCH /users/:id` changes a member's
+  role, department or status, and the team page gained an "add member" form plus
+  inline role and status controls. Previously the only way to add a teammate was
+  a direct API call or the seed script. An administrator cannot set another
+  account's password, and the last active administrator cannot be demoted or
+  deactivated.
 - Test suite of 104 backend cases covering authentication, role permissions, the
   issue workflow, comments, analytics, configuration validation and security
   properties, plus 3 frontend cases covering route protection.

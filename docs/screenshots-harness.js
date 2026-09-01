@@ -166,7 +166,7 @@ const shoot = async () => {
     await capture('dashboard', '/dashboard', { height: 1240 });
     await capture('issues', '/issues');
     await capture('projects', '/projects', { height: 600 });
-    await capture('team', '/users', { height: 545 });
+    await capture('team', '/users', { height: 620 });
     await capture('discussions', '/comments', { height: 900 });
 
     await browser.close();

@@ -104,4 +104,40 @@ const me = asyncHandler(async (req, res) => {
     });
 });
 
-module.exports = { register, login, me };
+const changePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (currentPassword === newPassword) {
+        throw ApiError.badRequest('The new password must differ from the current one');
+    }
+
+    // req.user comes from authenticate, which strips the hash — reload with it.
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        throw ApiError.unauthorized('User not found');
+    }
+
+    const isValidPassword = await user.comparePassword(currentPassword);
+    if (!isValidPassword) {
+        throw ApiError.unauthorized('Current password is incorrect');
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    await ActivityLog.create({
+        action: 'CHANGE_PASSWORD',
+        details: `${user.name} changed their password`,
+        user: user._id,
+    });
+
+    // The old token stays valid until it expires; hand back a fresh one so the
+    // client is not left holding a token minted before the change.
+    res.status(200).json({
+        success: true,
+        message: 'Password updated successfully',
+        data: { token: signToken(user) },
+    });
+});
+
+module.exports = { register, login, me, changePassword };

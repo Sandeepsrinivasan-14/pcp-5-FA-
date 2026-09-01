@@ -3,7 +3,7 @@ const controller = require('../controllers/authController');
 const { authenticate, optionalAuthenticate } = require('../middleware/auth');
 const { validateBody } = require('../middleware/validate');
 const { authLimiter } = require('../middleware/rateLimit');
-const { registerSchema, loginSchema } = require('../validators/schemas');
+const { registerSchema, loginSchema, changePasswordSchema } = require('../validators/schemas');
 
 const router = express.Router();
 
@@ -18,5 +18,12 @@ router.post(
 );
 router.post('/login', authLimiter, validateBody(loginSchema), controller.login);
 router.get('/me', authenticate, controller.me);
+router.patch(
+    '/password',
+    authenticate,
+    authLimiter,
+    validateBody(changePasswordSchema),
+    controller.changePassword
+);
 
 module.exports = router;
