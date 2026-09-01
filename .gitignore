@@ -1,8 +1,27 @@
-﻿node_modules/
-.env
-.DS_Store
-build/
-dist/
-*.log
+# Dependencies
+node_modules/
 backend/node_modules/
 frontend/node_modules/
+
+# Environment — never commit real secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+build/
+dist/
+frontend/build/
+
+# Test output
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,67 @@
+name: Bug report
+description: Something behaves differently than it should
+labels: ['bug', 'needs triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do **not** use this form for security
+        vulnerabilities — open a
+        [private advisory](https://github.com/Sandeepsrinivasan-14/trackit/security/advisories/new)
+        instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you observed, and what you expected instead.
+      placeholder: Assigning a closed issue returned 200 rather than being rejected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: The smallest sequence that shows the problem. A curl command is ideal.
+      placeholder: |
+        1. Sign in as a manager
+        2. PATCH /api/issues/ISS-1001/status with {"status": "closed"}
+        3. PATCH /api/issues/ISS-1001/assign with {"assignedTo": "usr-marco"}
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does it occur
+      options:
+        - API (backend)
+        - Web interface (frontend)
+        - Deployment or configuration
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v1.0.0, or the commit SHA you are running
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: How you are running it, and against which database.
+      placeholder: |
+        Node 20.11 on macOS 15
+        MongoDB Atlas M0
+        Running via docker compose
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Server output or browser console. Redact any tokens or connection strings.
+      render: shell

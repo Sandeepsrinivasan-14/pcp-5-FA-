@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "trackit-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -37,5 +37,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "description": "TrackIt web interface — React SPA for the issue tracking system",
+  "license": "MIT",
+  "author": "Sandeep Srinivasan S",
+  "jest": {
+    "moduleNameMapper": {
+      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js",
+      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js",
+      "^react-router$": "<rootDir>/node_modules/react-router/dist/development/index.js"
+    }
   }
 }

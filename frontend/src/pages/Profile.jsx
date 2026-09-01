@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import API from '../services/api';
 import Navbar from '../components/Navbar';
+import ChangePasswordCard from '../components/ChangePasswordCard';
 
 function Profile() {
     const { user } = useAuth();
@@ -125,6 +126,8 @@ function Profile() {
                         )}
                     </div>
                 </div>
+
+                <ChangePasswordCard />
             </div>
         </div>
     );

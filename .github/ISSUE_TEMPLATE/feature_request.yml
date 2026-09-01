@@ -1,0 +1,40 @@
+name: Feature request
+description: Suggest a capability TrackIt does not have yet
+labels: ['enhancement', 'needs triage']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve
+      description: Describe the situation you are in, not the solution you have in mind.
+      placeholder: |
+        When an issue sits untouched for a week nobody notices, because there is
+        no way to see staleness from the issues list.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+      description: How you imagine it working. Rough is fine.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the system
+      options:
+        - API (backend)
+        - Web interface (frontend)
+        - Both
+        - Deployment or tooling
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including workarounds you are using today.
