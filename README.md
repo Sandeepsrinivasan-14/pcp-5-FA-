@@ -13,7 +13,7 @@ analytics — with permissions that hold at the API, not just in the interface.
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black)](https://react.dev)
 [![MongoDB](https://img.shields.io/badge/MongoDB-8-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
-[![Tests](https://img.shields.io/badge/tests-107%20passing-16a34a)](backend/tests)
+[![Tests](https://img.shields.io/badge/tests-125%20passing-16a34a)](backend/tests)
 
 [Deploy your own](#deploy-your-own) · [Quick start](#quick-start) · [API reference](#api-reference) · [Architecture](#architecture) · [Contributing](CONTRIBUTING.md)
 
@@ -411,7 +411,7 @@ cd backend && npm run test:coverage         # with a coverage report
 cd frontend && npm test -- --watchAll=false # frontend routing tests
 ```
 
-The backend suite is 104 cases across seven files:
+The backend suite is 122 cases across eight files:
 
 | File | Covers |
 | --- | --- |
@@ -421,7 +421,8 @@ The backend suite is 104 cases across seven files:
 | `comments.test.js` | Threading, authorship, deletion permissions |
 | `analytics.test.js` | Aggregations and empty-data behaviour |
 | `app.test.js` | Routing, error shapes, security headers, config validation |
-| `security.test.js` | Password leakage, sync authorisation, seeding, injection |
+| `security.test.js` | Password leakage, sync authorisation, seeding, injection, privilege escalation |
+| `account.test.js` | Password change and administrator management of accounts |
 
 It runs against an in-memory MongoDB by default. Set `MONGODB_TEST_URI` to
 target a real instance — [CI](.github/workflows/ci.yml) does this with a service

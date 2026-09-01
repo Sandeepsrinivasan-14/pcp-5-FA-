@@ -53,7 +53,7 @@ put on the public internet.
   a direct API call or the seed script. An administrator cannot set another
   account's password, and the last active administrator cannot be demoted or
   deactivated.
-- Test suite of 104 backend cases covering authentication, role permissions, the
+- Test suite of 122 backend cases covering authentication, role permissions, the
   issue workflow, comments, analytics, configuration validation and security
   properties, plus 3 frontend cases covering route protection.
 - Continuous integration running lint, the test suite against a MongoDB service
